@@ -1,8 +1,8 @@
 {
-    "target": "esp32s3",
+    "target": "esp32c3",
     "builds": [
         {
-            "name": "esp-spot-c3",
+            "name": "esp-hi",
             "sdkconfig_append": []
         }
     ]

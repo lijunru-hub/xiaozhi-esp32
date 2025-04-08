@@ -10,13 +10,14 @@ class AdcPdmAudioCodec : public AudioCodec {
 private:
     esp_codec_dev_handle_t output_dev_ = nullptr;
     esp_codec_dev_handle_t input_dev_ = nullptr;
+    gpio_num_t pa_ctrl_pin_ = GPIO_NUM_NC;
 
     virtual int Read(int16_t* dest, int samples) override;
     virtual int Write(const int16_t* data, int samples) override;
 
 public:
     AdcPdmAudioCodec(int input_sample_rate, int output_sample_rate,
-        uint32_t adc_mic_channel, gpio_num_t pdm_speak);
+        uint32_t adc_mic_channel, gpio_num_t pdm_speak_p, gpio_num_t pdm_speak_n, gpio_num_t pa_ctl);
     virtual ~AdcPdmAudioCodec();
 
     virtual void SetOutputVolume(int volume) override;
