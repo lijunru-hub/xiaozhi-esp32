@@ -280,8 +280,6 @@ void Application::StartListening() {
         return;
     }
 
-    keep_listening_ = false;
-
     if (device_state_ == kDeviceStateIdle) {
         Schedule([this]() {
             if (!protocol_->IsAudioChannelOpened()) {

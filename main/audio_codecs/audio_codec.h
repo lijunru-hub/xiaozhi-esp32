@@ -15,12 +15,12 @@ class AudioCodec {
 public:
     AudioCodec();
     virtual ~AudioCodec();
-    
+
     virtual void SetOutputVolume(int volume);
     virtual void EnableInput(bool enable);
     virtual void EnableOutput(bool enable);
 
-    void Start();
+    virtual void Start();
     void OutputData(std::vector<int16_t>& data);
     bool InputData(std::vector<int16_t>& data);
 

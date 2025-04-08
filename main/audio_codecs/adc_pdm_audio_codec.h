@@ -23,6 +23,7 @@ public:
     virtual void SetOutputVolume(int volume) override;
     virtual void EnableInput(bool enable) override;
     virtual void EnableOutput(bool enable) override;
+    void Start() override;
 };
 
 #endif // _BOX_AUDIO_CODEC_H

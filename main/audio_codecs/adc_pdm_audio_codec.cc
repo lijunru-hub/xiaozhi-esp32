@@ -10,6 +10,7 @@
 #include "soc/io_mux_reg.h"
 #include "hal/rtc_io_hal.h"
 #include "hal/gpio_ll.h"
+#include "settings.h"
 
 static const char TAG[] = "AdcPdmAudioCodec";
 
@@ -41,7 +42,6 @@ AdcPdmAudioCodec::AdcPdmAudioCodec(int input_sample_rate, int output_sample_rate
     input_sample_rate_ = input_sample_rate;
     output_sample_rate_ = output_sample_rate;
 
-    esp_err_t ret;
     uint8_t adc_channel[1] = {0};
     adc_channel[0] = adc_mic_channel;
 
@@ -103,13 +103,13 @@ AdcPdmAudioCodec::AdcPdmAudioCodec(int input_sample_rate, int output_sample_rate
         io_conf.pull_up_en = GPIO_PULLUP_DISABLE;
         gpio_config(&io_conf);
     }
-    gpio_set_drive_capability(pdm_speak_p, GPIO_DRIVE_CAP_0); 
+    gpio_set_drive_capability(pdm_speak_p, GPIO_DRIVE_CAP_0);
 
     if(pdm_speak_n != GPIO_NUM_NC){
         PIN_FUNC_SELECT(GPIO_PIN_MUX_REG[pdm_speak_n], PIN_FUNC_GPIO);
         gpio_set_direction(pdm_speak_n, GPIO_MODE_OUTPUT);
         esp_rom_gpio_connect_out_signal(pdm_speak_n,I2SO_SD_OUT_IDX,1,0); //反转输出 SD OUT 信号
-        gpio_set_drive_capability(pdm_speak_n, GPIO_DRIVE_CAP_0); 
+        gpio_set_drive_capability(pdm_speak_n, GPIO_DRIVE_CAP_0);
     }
     ESP_LOGI(TAG, "AdcPdmAudioCodec initialized");
 }
@@ -184,4 +184,19 @@ int AdcPdmAudioCodec::Write(const int16_t* data, int samples) {
         ESP_ERROR_CHECK_WITHOUT_ABORT(esp_codec_dev_write(output_dev_, (void*)data, samples * sizeof(int16_t)));
     }
     return samples;
+}
+
+void AdcPdmAudioCodec::Start() {
+    Settings settings("audio", false);
+    output_volume_ = settings.GetInt("output_volume", output_volume_);
+    if (output_volume_ <= 0) {
+        ESP_LOGW(TAG, "Output volume value (%d) is too small, setting to default (10)", output_volume_);
+        output_volume_ = 10;
+    }
+
+    ESP_ERROR_CHECK(i2s_channel_enable(tx_handle_));
+
+    EnableInput(true);
+    EnableOutput(true);
+    ESP_LOGI(TAG, "Audio codec started");
 }
