@@ -34,8 +34,17 @@ void AudioCodec::Start() {
         output_volume_ = 10;
     }
 
+    // 注册音频数据回调
+    // i2s_event_callbacks_t rx_callbacks = {};
+    // rx_callbacks.on_recv = on_recv;
+    // i2s_channel_register_event_callback(rx_handle_, &rx_callbacks, this);
+
+    i2s_event_callbacks_t tx_callbacks = {};
+    tx_callbacks.on_sent = on_sent;
+    i2s_channel_register_event_callback(tx_handle_, &tx_callbacks, this);
+
     ESP_ERROR_CHECK(i2s_channel_enable(tx_handle_));
-    ESP_ERROR_CHECK(i2s_channel_enable(rx_handle_));
+    // ESP_ERROR_CHECK(i2s_channel_enable(rx_handle_));
 
     EnableInput(true);
     EnableOutput(true);
@@ -45,7 +54,7 @@ void AudioCodec::Start() {
 void AudioCodec::SetOutputVolume(int volume) {
     output_volume_ = volume;
     ESP_LOGI(TAG, "Set output volume to %d", output_volume_);
-    
+
     Settings settings("audio", true);
     settings.SetInt("output_volume", output_volume_);
 }

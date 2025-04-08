@@ -1,4 +1,5 @@
 set(SOURCES "audio_codecs/audio_codec.cc"
+            "audio_codecs/adc_pdm_audio_codec.cc"
             "audio_codecs/no_audio_codec.cc"
             "audio_codecs/box_audio_codec.cc"
             "audio_codecs/es8311_audio_codec.cc"
@@ -108,7 +109,7 @@ elseif(CONFIG_BOARD_TYPE_LILYGO_T_CAMERAPLUS_S3)
     set(BOARD_TYPE "lilygo-t-cameraplus-s3")
 elseif(CONFIG_BOARD_TYPE_MOVECALL_MOJI_ESP32S3)
     set(BOARD_TYPE "movecall-moji-esp32s3")
-    elseif(CONFIG_BOARD_TYPE_MOVECALL_CUICAN_ESP32S3)
+elseif(CONFIG_BOARD_TYPE_MOVECALL_CUICAN_ESP32S3)
     set(BOARD_TYPE "movecall-cuican-esp32s3")
 elseif(CONFIG_BOARD_TYPE_ATK_DNESP32S3)
     set(BOARD_TYPE "atk-dnesp32s3")
